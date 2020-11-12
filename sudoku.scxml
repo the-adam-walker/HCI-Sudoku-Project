@@ -7,12 +7,12 @@
     </datamodel>
     <script src="sudoku.js"/>
     <state id="game">
-        <qt:editorinfo scenegeometry="0;-30;-283.56;-341.69;403.56;487.71" geometry="0;-30;-283.56;-311.69;403.56;487.71"/>
+        <qt:editorinfo scenegeometry="0;-30;-283.56;-348.75;509.84;453.27" geometry="0;-30;-283.56;-318.75;509.84;453.27"/>
         <onentry>
             <raise event="restart"/>
         </onentry>
         <state id="idle">
-            <qt:editorinfo scenegeometry="0;-170;-170;-272.42;270;207.06" geometry="0;-140;-170;-102.42;270;207.06"/>
+            <qt:editorinfo scenegeometry="3.04;-179.13;-166.96;-281.55;270;207.06" geometry="3.04;-149.13;-170;-102.42;270;207.06"/>
             <transition type="internal" event="start" target="playing"/>
             <transition type="internal" event="setup" target="unsolved">
                 <assign location="initState" expr="_event.data.initState"/>
@@ -24,9 +24,22 @@
             <state id="solved">
                 <qt:editorinfo scenegeometry="20;-135.36;-40;-185.36;120;100" geometry="20;34.64;-60;-50;120;100"/>
             </state>
+            <transition type="external" event="note" target="notepad">
+                <qt:editorinfo endTargetFactors="71.54;10.68"/>
+            </transition>
         </state>
+        <transition type="internal" event="restart">
+            <script>restart();</script>
+            <raise event="update"/>
+        </transition>
+        <transition type="internal" event="update">
+            <send event="updateGUI">
+                <param name="currentState" expr="currentState"/>
+                <param name="initState" expr="initState"/>
+            </send>
+        </transition>
         <state id="playing">
-            <qt:editorinfo scenegeometry="-9.27;60.02;-115.27;11.54;146;114.48" geometry="-9.27;90.02;-106;-48.48;146;114.48"/>
+            <qt:editorinfo scenegeometry="-50.81;10.30;-156.81;-38.18;146;114.48" geometry="-50.81;40.30;-106;-48.48;146;114.48"/>
             <onentry>
                 <raise event="restart"/>
             </onentry>
@@ -43,18 +56,19 @@
                 <script>undo();</script>
                 <raise event="update"/>
             </transition>
-            <transition type="internal" event="stop" target="idle"/>
+            <transition type="internal" event="stop" target="idle">
+                <qt:editorinfo endTargetFactors="26.75;92.50"/>
+            </transition>
             <transition type="internal" event="solved" target="solved"/>
+            <transition type="external" event="note" target="notepad">
+                <qt:editorinfo endTargetFactors="13.93;17.87"/>
+            </transition>
         </state>
-        <transition type="internal" event="restart">
-            <script>restart();</script>
-            <raise event="update"/>
-        </transition>
-        <transition type="internal" event="update">
-            <send event="updateGUI">
-                <param name="currentState" expr="currentState"/>
-                <param name="initState" expr="initState"/>
-            </send>
+    </state>
+    <state id="notepad">
+        <qt:editorinfo scenegeometry="1.92;208.28;-58.08;158.28;361.44;284.36" geometry="1.92;208.28;-60;-50;361.44;284.36"/>
+        <transition type="external" event="back" target="game">
+            <qt:editorinfo endTargetFactors="67.01;90.41"/>
         </transition>
     </state>
 </scxml>

@@ -59,6 +59,7 @@
 #include <QStringListModel>
 #include <QTextStream>
 #include <QToolButton>
+#include <QPlainTextEdit>
 
 static int Size = 9;
 
@@ -162,10 +163,16 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
     connect(m_noteButton, &QAbstractButton::clicked,
             [this] {
         if (m_machine->isActive("playing"))
-            m_machine->submitEvent("stop");
+            m_machine->submitEvent("note");
         else
-            m_machine->submitEvent("start");
+            m_machine->submitEvent("note");
     }); // End of Note Button Creation
+
+    // Add notepad
+    QPlainTextEdit *notePad = new QPlainTextEdit(this);
+    notePad->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addWidget(notePad, 0, Size + 2, Size + 6, 1);
+
 
     m_label = new QLabel(tr("unsolved"));
     m_label->setAlignment(Qt::AlignCenter);
@@ -210,12 +217,12 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
             m_startButton->setText(tr("Stop"));
             m_undoButton->setEnabled(true);
             m_chooser->setEnabled(false);
-            m_noteButton->setText(tr("Note"));
+            //m_noteButton->setText(tr("Note"));
         } else {
             m_startButton->setText(tr("Start"));
             m_undoButton->setEnabled(false);
             m_chooser->setEnabled(true);
-            m_noteButton->setText(tr("Note"));
+            //m_noteButton->setText(tr("Note"));
         }
     });
 
@@ -225,6 +232,7 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
         else
             m_label->setText(tr("unsolved"));
     });
+
 
     m_machine->connectToEvent("updateGUI", [this] (const QScxmlEvent &event) {
         const QVariant data = event.data();

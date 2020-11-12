@@ -64,6 +64,6 @@ int main(int argc, char **argv)
 
     machine.start();
     mainWindow.show();
-    notePad.show();
+    //notePad.show();
     return app.exec();
 }
