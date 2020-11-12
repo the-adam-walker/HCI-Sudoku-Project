@@ -54,6 +54,7 @@
 #include <QDir>
 #include <QFile>
 #include <QGridLayout>
+#include <QPlainTextEdit>
 #include <QLabel>
 #include <QScxmlStateMachine>
 #include <QStringListModel>
@@ -110,6 +111,7 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
     m_buttons = QVector<QVector<QToolButton *> >(Size, initVector);
 
     QGridLayout *layout = new QGridLayout(this);
+    QPlainTe
 
     for (int i = 0; i < Size; i++) {
         for (int j = 0; j < Size; j++) {

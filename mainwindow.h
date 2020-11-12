@@ -74,6 +74,7 @@ private:
     QVector<QVector<QToolButton *> > m_buttons;
     QToolButton *m_startButton;
     QToolButton *m_undoButton;
+    QToolButton *m_noteButton;
     QLabel *m_label;
     QComboBox *m_chooser;
 };
