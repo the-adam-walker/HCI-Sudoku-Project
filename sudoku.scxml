@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" name="Sudoku" datamodel="ecmascript" qt:editorversion="4.13.2" xmlns:qt="http://www.qt.io/2015/02/scxml-ext">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Sudoku" datamodel="ecmascript" qt:editorversion="4.13.2">
     <datamodel>
         <data id="initState"/>
         <data id="currentState" expr="[[]]"/>
         <data id="undoStack"/>
+        <data id="noteState" expr="[[]]">
+            <qt:editorinfo geometry="-706.65;-1052.70;0;0;0;0"/>
+        </data>
     </datamodel>
     <script src="sudoku.js"/>
     <state id="game">
-        <qt:editorinfo scenegeometry="0;-30;-283.56;-348.75;509.84;453.27" geometry="0;-30;-283.56;-318.75;509.84;453.27"/>
+        <qt:editorinfo scenegeometry="89.95;-485.45;-396.22;-1134.44;691.46;855.59" geometry="89.95;-485.45;-486.17;-648.99;691.46;855.59"/>
         <onentry>
             <raise event="restart"/>
         </onentry>
         <state id="idle">
-            <qt:editorinfo scenegeometry="3.04;-179.13;-166.96;-281.55;270;207.06" geometry="3.04;-149.13;-170;-102.42;270;207.06"/>
+            <qt:editorinfo scenegeometry="-58.13;-686.75;-228.13;-789.17;270;207.06" geometry="-148.08;-201.30;-170;-102.42;270;207.06"/>
             <transition type="internal" event="start" target="playing"/>
             <transition type="internal" event="setup" target="unsolved">
                 <assign location="initState" expr="_event.data.initState"/>
                 <raise event="restart"/>
             </transition>
             <state id="unsolved">
-                <qt:editorinfo scenegeometry="-90;-170;-150;-220;120;100" geometry="-90;-0;-60;-50;120;100"/>
+                <qt:editorinfo scenegeometry="-148.13;-686.75;-208.13;-736.75;120;100" geometry="-90;0;-60;-50;120;100"/>
             </state>
             <state id="solved">
-                <qt:editorinfo scenegeometry="20;-135.36;-40;-185.36;120;100" geometry="20;34.64;-60;-50;120;100"/>
+                <qt:editorinfo scenegeometry="-38.13;-652.11;-98.13;-702.11;120;100" geometry="20;34.64;-60;-50;120;100"/>
             </state>
-            <transition type="external" event="note" target="notepad">
-                <qt:editorinfo endTargetFactors="71.54;10.68"/>
-            </transition>
         </state>
         <transition type="internal" event="restart">
             <script>restart();</script>
@@ -39,10 +39,7 @@
             </send>
         </transition>
         <state id="playing">
-            <qt:editorinfo scenegeometry="-50.81;10.30;-156.81;-38.18;146;114.48" geometry="-50.81;40.30;-106;-48.48;146;114.48"/>
-            <onentry>
-                <raise event="restart"/>
-            </onentry>
+            <qt:editorinfo scenegeometry="-49.51;-454.53;-195.99;-505.23;186.48;176.70" geometry="-139.46;30.92;-146.48;-50.70;186.48;176.70"/>
             <transition type="internal" event="tap">
                 <if cond="isValidPosition()">
                     <script>calculateCurrentState();</script>
@@ -60,15 +57,34 @@
                 <qt:editorinfo endTargetFactors="26.75;92.50"/>
             </transition>
             <transition type="internal" event="solved" target="solved"/>
-            <transition type="external" event="note" target="notepad">
-                <qt:editorinfo endTargetFactors="13.93;17.87"/>
+            <transition type="external" event="note" target="noting">
+                <qt:editorinfo endTargetFactors="10.64;43.31"/>
+                <raise event="update"/>
+            </transition>
+            <onentry>
+                <raise event="restart"/>
+            </onentry>
+        </state>
+        <state id="noting">
+            <qt:editorinfo scenegeometry="172.72;-456.93;56.81;-508.88;218.43;199.09" geometry="82.77;28.52;-115.91;-51.95;218.43;199.09"/>
+            <transition type="external" event="pen" target="playing">
+                <qt:editorinfo endTargetFactors="94.53;66.55"/>
+            </transition>
+            <transition type="internal" event="tap">
+                <if cond="isValidPosition()">
+                    <qt:editorinfo geometry="-438.96;-845.53;0;0;0;0"/>
+                    <script>calculateCurrentState();</script>
+                </if>
+                <raise event="update"/>
+                <raise event="update"/>
+            </transition>
+            <transition type="internal" event="undo">
+                <script>undo();</script>
+                <raise event="update"/>
             </transition>
         </state>
     </state>
     <state id="notepad">
-        <qt:editorinfo scenegeometry="1.92;208.28;-58.08;158.28;361.44;284.36" geometry="1.92;208.28;-60;-50;361.44;284.36"/>
-        <transition type="external" event="back" target="game">
-            <qt:editorinfo endTargetFactors="67.01;90.41"/>
-        </transition>
+        <qt:editorinfo scenegeometry="-6.54;-158.92;-153.02;-216.43;447.92;291.87" geometry="-6.54;-158.92;-146.48;-57.51;447.92;291.87"/>
     </state>
 </scxml>
