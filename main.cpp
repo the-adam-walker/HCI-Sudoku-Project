@@ -50,6 +50,7 @@
 
 #include "mainwindow.h"
 #include "sudoku.h"
+#include "notepad.h"
 
 #include <QApplication>
 
@@ -59,8 +60,10 @@ int main(int argc, char **argv)
 
     Sudoku machine;
     MainWindow mainWindow(&machine);
+    NotePad notePad;
 
     machine.start();
     mainWindow.show();
+    //notePad.show();
     return app.exec();
 }

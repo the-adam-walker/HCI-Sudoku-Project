@@ -47,7 +47,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
 function restart() {
     for (var i = 0; i < initState.length; i++)
         currentState[i] = initState[i].slice();
@@ -127,4 +126,21 @@ function undo() {
     else
         currentValue -= 1;
     currentState[x][y] = currentValue;
+}
+
+function note() {
+
+}
+
+function pen() {
+    var fs = require("fs");
+    var data = '';
+
+    for (var i = 0; i < currentState.length; i++) {
+       data += currentState[i];
+    }
+    fs.writeFile('..//data//notes.data', data, (err) => {
+        if (err) throw err;
+    });
+    undoStack = [];
 }

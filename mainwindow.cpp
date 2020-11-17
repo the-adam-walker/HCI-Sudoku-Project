@@ -59,6 +59,7 @@
 #include <QStringListModel>
 #include <QTextStream>
 #include <QToolButton>
+#include <QPlainTextEdit>
 
 static int Size = 9;
 
@@ -110,18 +111,32 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
     m_buttons = QVector<QVector<QToolButton *> >(Size, initVector);
 
     QGridLayout *layout = new QGridLayout(this);
-
     for (int i = 0; i < Size; i++) {
         for (int j = 0; j < Size; j++) {
             QToolButton *button = new QToolButton(this);
             button->setSizePolicy(QSizePolicy::Expanding,
                                   QSizePolicy::Expanding);
+
             layout->addWidget(button, i + i / 3, j + j / 3);
             m_buttons[i][j] = button;
             connect(button, &QToolButton::clicked, [this, i, j] () {
+                const bool notes = m_machine->isActive("noting");
                 QVariantMap data;
                 data.insert(QStringLiteral("x"), i);
                 data.insert(QStringLiteral("y"), j);
+                if (notes) {
+                    QPalette pal = m_buttons[i][j]->palette();
+                    pal.setColor(QPalette::Button, QColor(Qt::blue));
+                    m_buttons[i][j]->setAutoFillBackground(true);
+                    m_buttons[i][j]->setPalette(pal);
+                    m_buttons[i][j]->update();
+                } else {
+                    QPalette pal = m_buttons[i][j]->palette();
+                    pal.setColor(QPalette::Button, QColor(Qt::white));
+                    m_buttons[i][j]->setAutoFillBackground(true);
+                    m_buttons[i][j]->setPalette(pal);
+                    m_buttons[i][j]->update();
+                }
                 m_machine->submitEvent("tap", data);
             });
         }
@@ -152,6 +167,32 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
         else
             m_machine->submitEvent("start");
     });
+
+    // Added note Button
+    m_noteButton = new QToolButton(this);
+    m_noteButton->setSizePolicy(QSizePolicy::Expanding,
+                                 QSizePolicy::Expanding);
+    m_noteButton->setText(tr("Take Notes"));
+    m_noteButton->setEnabled(false);
+    layout->addWidget(m_noteButton, Size + 5, 0, 1, 11);
+
+    connect(m_noteButton, &QAbstractButton::clicked,
+            [this] {
+        if (m_machine->isActive("noting")){
+            m_machine->submitEvent("pen");
+        } else {
+            m_machine->submitEvent("note");
+        }
+    }); // End of Note Button Creation
+
+    // Add notepad
+    m_notelabel = new QLabel(tr("Notepad: use to type any notes you need"));
+    m_notelabel->setAlignment(Qt::AlignTop);
+    layout->addWidget(m_notelabel, 0, Size + 2, Size + 6, 1);
+    QPlainTextEdit *notePad = new QPlainTextEdit(this);
+    notePad->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addWidget(notePad, 1, Size + 2, Size + 5, 1);
+
 
     m_label = new QLabel(tr("unsolved"));
     m_label->setAlignment(Qt::AlignCenter);
@@ -196,10 +237,22 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
             m_startButton->setText(tr("Stop"));
             m_undoButton->setEnabled(true);
             m_chooser->setEnabled(false);
+            m_noteButton->setEnabled(true);
+
         } else {
             m_startButton->setText(tr("Start"));
             m_undoButton->setEnabled(false);
             m_chooser->setEnabled(true);
+            m_noteButton->setEnabled(false);
+        }
+    });
+
+    m_machine->connectToState("noting", [this] (bool noting) {
+        if (noting) {
+            m_noteButton->setText(tr("Quit Note Taking"));
+            m_noteButton->setEnabled(true);
+        } else {
+            m_noteButton->setText(tr("Take Notes"));
         }
     });
 
@@ -209,6 +262,7 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
         else
             m_label->setText(tr("unsolved"));
     });
+
 
     m_machine->connectToEvent("updateGUI", [this] (const QScxmlEvent &event) {
         const QVariant data = event.data();
@@ -225,6 +279,7 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
         }
 
         const bool active = m_machine->isActive("playing");
+        const bool notes = m_machine->isActive("noting");
 
         const QVariantList initRows = data.toMap().value("initState").toList();
         for (int i = 0; i < initRows.count(); i++) {
@@ -232,9 +287,9 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
             for (int j = 0; j < row.count(); j++) {
                 const int value = row.at(j).toInt();
                 // enable only zeroes from initState
-                const bool enabled = !value && active;
+                const bool enabled = !value && (active || notes);
                 m_buttons[i][j]->setEnabled(enabled);
-            }
+          }
         }
     });
 

@@ -7,10 +7,12 @@ STATECHARTS = sudoku.scxml
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    notepad.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    notepad.h
 
 RESOURCES += \
     sudoku.qrc
