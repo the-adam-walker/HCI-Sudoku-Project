@@ -10,22 +10,22 @@
     </datamodel>
     <script src="sudoku.js"/>
     <state id="game">
-        <qt:editorinfo scenegeometry="89.95;-485.45;-396.22;-1134.44;691.46;855.59" geometry="89.95;-485.45;-486.17;-648.99;691.46;855.59"/>
+        <qt:editorinfo geometry="281.11;-521.22;-507.85;-648.99;713.14;868.30" scenegeometry="281.11;-521.22;-226.74;-1170.21;713.14;868.30"/>
         <onentry>
             <raise event="restart"/>
         </onentry>
         <state id="idle">
-            <qt:editorinfo scenegeometry="-58.13;-686.75;-228.13;-789.17;270;207.06" geometry="-148.08;-201.30;-170;-102.42;270;207.06"/>
+            <qt:editorinfo geometry="-148.08;-201.30;-170;-102.42;270;207.06" scenegeometry="133.03;-722.52;-36.97;-824.94;270;207.06"/>
             <transition type="internal" event="start" target="playing"/>
             <transition type="internal" event="setup" target="unsolved">
                 <assign location="initState" expr="_event.data.initState"/>
                 <raise event="restart"/>
             </transition>
             <state id="unsolved">
-                <qt:editorinfo scenegeometry="-148.13;-686.75;-208.13;-736.75;120;100" geometry="-90;0;-60;-50;120;100"/>
+                <qt:editorinfo geometry="-90;0;-60;-50;120;100" scenegeometry="43.03;-722.52;-16.97;-772.52;120;100"/>
             </state>
             <state id="solved">
-                <qt:editorinfo scenegeometry="-38.13;-652.11;-98.13;-702.11;120;100" geometry="20;34.64;-60;-50;120;100"/>
+                <qt:editorinfo geometry="20;34.64;-60;-50;120;100" scenegeometry="153.03;-687.88;93.03;-737.88;120;100"/>
             </state>
         </state>
         <transition type="internal" event="restart">
@@ -39,16 +39,7 @@
             </send>
         </transition>
         <state id="playing">
-            <qt:editorinfo scenegeometry="-49.51;-454.53;-195.99;-505.23;186.48;176.70" geometry="-139.46;30.92;-146.48;-50.70;186.48;176.70"/>
-            <transition type="internal" event="tap">
-                <if cond="isValidPosition()">
-                    <script>calculateCurrentState();</script>
-                    <if cond="isSolved()">
-                        <raise event="solved"/>
-                    </if>
-                    <raise event="update"/>
-                </if>
-            </transition>
+            <qt:editorinfo geometry="-139.46;30.92;-252.48;-125.44;575.49;293.83" scenegeometry="141.65;-490.30;-110.83;-615.74;575.49;293.83"/>
             <transition type="internal" event="undo">
                 <script>undo();</script>
                 <raise event="update"/>
@@ -57,34 +48,39 @@
                 <qt:editorinfo endTargetFactors="26.75;92.50"/>
             </transition>
             <transition type="internal" event="solved" target="solved"/>
-            <transition type="external" event="note" target="noting">
-                <qt:editorinfo endTargetFactors="10.64;43.31"/>
-                <raise event="update"/>
-            </transition>
             <onentry>
                 <raise event="restart"/>
             </onentry>
-        </state>
-        <state id="noting">
-            <qt:editorinfo scenegeometry="172.72;-456.93;56.81;-508.88;218.43;199.09" geometry="82.77;28.52;-115.91;-51.95;218.43;199.09"/>
-            <transition type="external" event="pen" target="playing">
-                <qt:editorinfo endTargetFactors="94.53;66.55"/>
-            </transition>
-            <transition type="internal" event="tap">
-                <if cond="isValidPosition()">
-                    <qt:editorinfo geometry="-438.96;-845.53;0;0;0;0"/>
-                    <script>calculateCurrentState();</script>
-                </if>
-                <raise event="update"/>
-                <raise event="update"/>
-            </transition>
-            <transition type="internal" event="undo">
-                <script>undo();</script>
-                <raise event="update"/>
-            </transition>
+            <state id="solving">
+                <qt:editorinfo geometry="-25.64;-9.85;-115.91;-51.95;218.43;199.09" scenegeometry="116.01;-500.15;0.10;-552.10;218.43;199.09"/>
+                <transition type="external" event="note" target="noting">
+                    <qt:editorinfo endTargetFactors="11.01;44.01"/>
+                </transition>
+                <transition type="internal" event="tap">
+                    <if cond="isValidPosition()">
+                        <script>calculateCurrentState();</script>
+                        <if cond="isSolved()">
+                            <raise event="solved"/>
+                        </if>
+                        <raise event="update"/>
+                    </if>
+                </transition>
+            </state>
+            <state id="noting">
+                <qt:editorinfo geometry="199.97;14.26;-106;-50.33;166;172.13" scenegeometry="341.62;-476.04;235.62;-526.37;166;172.13"/>
+                <transition type="external" event="pen" target="solving">
+                    <qt:editorinfo endTargetFactors="91.75;63.73"/>
+                </transition>
+                <transition type="internal" event="tap">
+                    <if cond="isValidPosition()">
+                        <script>calculateCurrentState();</script>
+                        <raise event="update"/>
+                    </if>
+                </transition>
+            </state>
         </state>
     </state>
     <state id="notepad">
-        <qt:editorinfo scenegeometry="-6.54;-158.92;-153.02;-216.43;447.92;291.87" geometry="-6.54;-158.92;-146.48;-57.51;447.92;291.87"/>
+        <qt:editorinfo geometry="-6.54;-158.92;-146.48;-57.51;447.92;291.87" scenegeometry="-6.54;-158.92;-153.02;-216.43;447.92;291.87"/>
     </state>
 </scxml>

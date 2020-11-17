@@ -130,6 +130,12 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
                     m_buttons[i][j]->setAutoFillBackground(true);
                     m_buttons[i][j]->setPalette(pal);
                     m_buttons[i][j]->update();
+                } else {
+                    QPalette pal = m_buttons[i][j]->palette();
+                    pal.setColor(QPalette::Button, QColor(Qt::white));
+                    m_buttons[i][j]->setAutoFillBackground(true);
+                    m_buttons[i][j]->setPalette(pal);
+                    m_buttons[i][j]->update();
                 }
                 m_machine->submitEvent("tap", data);
             });
@@ -280,14 +286,6 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
                 // enable only zeroes from initState
                 const bool enabled = !value && (active || notes);
                 m_buttons[i][j]->setEnabled(enabled);
-                // turns buttons back to white after taking notes
-                if (active) {
-                    QPalette pal = m_buttons[i][j]->palette();
-                    pal.setColor(QPalette::Button, QColor(Qt::white));
-                    m_buttons[i][j]->setAutoFillBackground(true);
-                    m_buttons[i][j]->setPalette(pal);
-                    m_buttons[i][j]->update();
-                }
           }
         }
     });
