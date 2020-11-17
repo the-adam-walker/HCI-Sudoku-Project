@@ -186,9 +186,12 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
     }); // End of Note Button Creation
 
     // Add notepad
+    m_notelabel = new QLabel(tr("Notepad: use to type any notes you need"));
+    m_notelabel->setAlignment(Qt::AlignTop);
+    layout->addWidget(m_notelabel, 0, Size + 2, Size + 6, 1);
     QPlainTextEdit *notePad = new QPlainTextEdit(this);
     notePad->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->addWidget(notePad, 0, Size + 2, Size + 6, 1);
+    layout->addWidget(notePad, 1, Size + 2, Size + 5, 1);
 
 
     m_label = new QLabel(tr("unsolved"));
@@ -246,7 +249,7 @@ MainWindow::MainWindow(QScxmlStateMachine *machine, QWidget *parent) :
 
     m_machine->connectToState("noting", [this] (bool noting) {
         if (noting) {
-            m_noteButton->setText(tr("Back to Game"));
+            m_noteButton->setText(tr("Quit Note Taking"));
             m_noteButton->setEnabled(true);
         } else {
             m_noteButton->setText(tr("Take Notes"));
