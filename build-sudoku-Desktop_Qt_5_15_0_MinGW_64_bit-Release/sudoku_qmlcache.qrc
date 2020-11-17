@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<RCC>
+    <qresource prefix="/">
+        <file alias="sudoku.js">../HCI-Sudoku-Project/sudoku.js</file>
+        <file alias="data/9x9.data">../HCI-Sudoku-Project/data/9x9.data</file>
+        <file alias="data/nearly-solved-sudoku.data">../HCI-Sudoku-Project/data/nearly-solved-sudoku.data</file>
+    </qresource>
+</RCC>
